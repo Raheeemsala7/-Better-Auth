@@ -11,7 +11,7 @@ const Page = async() => {
 
 
     if (!session) {
-        return <h1 className="text-destructive">405 Unauthorized</h1>
+        return <h1 className="text-destructive">405 Unauthorized /</h1>
     }
 
 
