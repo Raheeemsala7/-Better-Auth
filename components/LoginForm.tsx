@@ -31,10 +31,10 @@ const LoginForm = () => {
                 email,
                 password,
             }, {
-                onRequest: (ctx) => {
+                onRequest: () => {
                     //show loading
                 },
-                onSuccess: (ctx) => {
+                onSuccess: () => {
                     toast.success("Sucessfully create Account");
                     router.push("/profile")
                 },

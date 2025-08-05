@@ -34,10 +34,10 @@ const RegisterForm = () => {
                 password, // user password -> min 8 characters by default
                 name, // user display name
             }, {
-                onRequest: (ctx) => {
+                onRequest: () => {
                     //show loading
                 },
-                onSuccess: (ctx) => {
+                onSuccess: () => {
                     //redirect to the dashboard or sign in page
                     toast.success("Sucessfully create Account");
                     router.push("/auth/login")
