@@ -22,7 +22,7 @@ model Post {
 }
 
 model User {
-  id            String    @id
+  id            String    @id @default(uuid())
   name          String
   email         String    @unique
   emailVerified Boolean
@@ -38,7 +38,7 @@ model User {
 }
 
 model Session {
-  id        String   @id
+  id        String   @id  @default(uuid())
   expiresAt DateTime
   token     String   @unique
   createdAt DateTime
@@ -52,7 +52,7 @@ model Session {
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id  @default(uuid())
   createdAt             DateTime
   updatedAt             DateTime
   accountId             String
@@ -71,7 +71,7 @@ model Account {
 }
 
 model Verification {
-  id         String    @id
+  id         String    @id  @default(uuid())
   identifier String
   value      String
   expiresAt  DateTime
