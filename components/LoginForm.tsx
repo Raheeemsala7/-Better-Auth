@@ -4,10 +4,11 @@ import { Label } from './ui/label'
 import { Input } from './ui/input'
 
 import { toast } from 'sonner'
-import { signIn } from '@/lib/auth-client'
 import { Button } from './ui/button'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { SignInWithEmail } from '@/app/actions/signin-email'
+import { tryCatch } from '@/hooks/tryCatch'
 
 const LoginForm = () => {
 
@@ -20,33 +21,18 @@ const LoginForm = () => {
 
         const formData = new FormData(e.target as HTMLFormElement)
 
-        const email = String(formData.get("email"))
-        const password = String(formData.get("password"))
-
-        if (!email) return toast.error("Prease Enter Email")
-        if (!password) return toast.error("Prease Enter Password")
-
         startTransition(async () => {
-            await signIn.email({
-                email,
-                password,
-            }, {
-                onRequest: () => {
-                    //show loading
-                },
-                onSuccess: () => {
-                    toast.success("Sucessfully create Account");
-                    router.push("/profile")
-                },
-                onError: (ctx) => {
-                    toast.error(ctx.error.message);
-                },
-            });
+            const { data, error } = await tryCatch(SignInWithEmail(formData))
+
+            if (data) {
+                toast.success(data?.message)
+                router.push('/profile')
+
+            } else {
+                toast.error(error?.message)
+            }
 
         })
-
-
-        console.log({ email, password })
 
 
     }
