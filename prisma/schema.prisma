@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
@@ -16,9 +17,15 @@ model Post {
   content  String
 
   userId String
-  user User @relation(fields: [userId] , references:[id] , onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("posts")
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
 }
 
 model User {
@@ -31,14 +38,19 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  role          Role      @default(USER)
 
   posts Post[]
+
+  banned     Boolean?
+  banReason  String?
+  banExpires DateTime?
 
   @@map("users")
 }
 
 model Session {
-  id        String   @id  @default(uuid())
+  id        String   @id @default(uuid())
   expiresAt DateTime
   token     String   @unique
   createdAt DateTime
@@ -48,11 +60,13 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  impersonatedBy String?
+
   @@map("session")
 }
 
 model Account {
-  id                    String    @id  @default(uuid())
+  id                    String    @id @default(uuid())
   createdAt             DateTime
   updatedAt             DateTime
   accountId             String
@@ -65,13 +79,14 @@ model Account {
   scope                 String?
   password              String?
 
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("accounts")
 }
 
 model Verification {
-  id         String    @id  @default(uuid())
+  id         String    @id @default(uuid())
   identifier String
   value      String
   expiresAt  DateTime

@@ -22,3 +22,5 @@ export async function verifyPassword(data : {password:string, hash:string}) {
     const result = await verify(hash , password , options)
     return result
 }
+
+

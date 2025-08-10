@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth"
 import { ApiResponse } from "@/lib/types"
+import { headers } from "next/headers"
 import { toast } from "sonner"
 
 
@@ -17,6 +18,7 @@ export async function SignInWithEmail(formData: FormData): Promise<ApiResponse> 
 
     try {
         await auth.api.signInEmail({
+            headers: await headers(),
             body: {
                 email,
                 password,

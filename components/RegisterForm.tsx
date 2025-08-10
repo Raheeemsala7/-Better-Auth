@@ -25,12 +25,15 @@ const RegisterForm = () => {
         startTransition(async () => {
             const {data , error} = await tryCatch(SignupEmail(formData))
 
-            if (data) {
+            console.log({data , error})
+
+            if (data?.status === "success") {
+
                 toast.success(data?.message)
                 router.push('/auth/login')
 
             } else {
-                toast.error(error?.message)
+                toast.error(data?.message)
             }
 
         })

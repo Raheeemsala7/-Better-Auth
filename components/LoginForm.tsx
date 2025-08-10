@@ -24,12 +24,13 @@ const LoginForm = () => {
         startTransition(async () => {
             const { data, error } = await tryCatch(SignInWithEmail(formData))
 
-            if (data) {
+            if (data?.status === "success") {
+
                 toast.success(data?.message)
                 router.push('/profile')
 
             } else {
-                toast.error(error?.message)
+                toast.error(data?.message)
             }
 
         })
