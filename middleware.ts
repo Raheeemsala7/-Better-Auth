@@ -22,19 +22,6 @@ export async function middleware(req: NextRequest) {
     const isOnProtectedRoute = protectedRoutes.includes(nextUrl.pathname)
     const isOnAuthRoute = nextUrl.pathname.startsWith("/auth")
 
-
-    // ⛔ طرد اليوزر لو اتحذف من الداتا بيز
-    // if (isLoggedIn && session?.user?.id) {
-    //     const userInDb = await prisma.user.findUnique({
-    //         where: { id: session.user.id },
-    //         select: { id: true },
-    //     });
-
-    //     if (!userInDb) {
-    //         return NextResponse.redirect(new URL("/auth/login", req.url));
-    //     }
-    // }
-
     if (isOnProtectedRoute && !isLoggedIn) {
         return NextResponse.redirect(new URL("/auth/login", req.url))
     }
