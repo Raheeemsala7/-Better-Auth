@@ -5,6 +5,7 @@ import { hashPassword, verifyPassword } from "./argon2";
 import { nextCookies } from "better-auth/next-js";
 import { admin } from "better-auth/plugins"
 import { ac, roles } from "./premisions";
+import { sendEmailAction } from "@/app/actions/send-emails";
 
 
 export const auth = betterAuth({
@@ -21,8 +22,41 @@ export const auth = betterAuth({
     password: {
       hash: hashPassword,
       verify: verifyPassword
-    }
+    },
+    requireEmailVerification: true,
   },
+  emailVerification: {
+    sendOnSignUp: true,
+    expiresIn: 60 * 60,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const link = new URL(url);
+      link.searchParams.set("callbackURL", "/auth/verify");
+
+      await sendEmailAction({
+        to: user.email,
+        subject: "Verify your email address",
+        meta: {
+          description:
+            "Please verify your email address to complete the registration process.",
+          link: String(link),
+        },
+      });
+    }
+
+  }
+  ,
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+    },
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!
+    }
+  }
+  ,
   databaseHooks: {
     user: {
       create: {
@@ -32,7 +66,7 @@ export const auth = betterAuth({
             return { data: { ...user, role: "ADMIN" } }
           }
 
-          return {data : user}
+          return { data: user }
         }
       }
     }
@@ -40,7 +74,7 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        type: ["USER", "ADMIN", "SUPER_ADMIN"] ,
+        type: ["USER", "ADMIN", "SUPER_ADMIN"],
         input: false
       }
     },
@@ -51,22 +85,27 @@ export const auth = betterAuth({
   session: {
     expiresIn: 30 * 24 * 60 * 60
   },
+  account: {
+    accountLinking: {
+      enabled: false
+    }
+  },
   advanced: {
     database: {
       generateId: false
     }
   },
 
-  plugins: [nextCookies() , admin(
+  plugins: [nextCookies(), admin(
     {
-    defaultRole: "USER",
-    adminRoles : ["ADMIN" , "SUPER_ADMIN"],
-    ac,
-    roles
+      defaultRole: "USER",
+      adminRoles: ["ADMIN", "SUPER_ADMIN"],
+      ac,
+      roles
 
     }
   )]
 });
 
 
-export type ErrorCode = keyof typeof auth.$ERROR_CODES | "UNKNOW"
+export type ErrorCode = keyof typeof auth.$ERROR_CODES | "UNKNOWN";

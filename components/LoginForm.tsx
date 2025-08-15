@@ -38,7 +38,7 @@ const LoginForm = () => {
 
     }
     return (
-        <form onSubmit={handelSubmit} className='flex flex-col gap-4 max-w-sm w-full mx-auto mt-8'>
+        <form onSubmit={handelSubmit} className='flex flex-col gap-4 max-w-sm w-full mt-8'>
             <div className="space-y-2">
                 <Label htmlFor='email'>Email</Label>
                 <Input id='email' name='email' type='email' placeholder='Enter your Email' />

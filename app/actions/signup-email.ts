@@ -110,13 +110,8 @@ export async function SignupEmail(formData: FormData): Promise<ApiResponse> {
             message: "User Created Successfully go to login"
         }
     } catch (err) {
-        // تشخيص مفصل للخطأ
-        console.error("=== SIGNUP ERROR DEBUG ===");
         console.error("Full error:", err);
-        console.error("Error type:", typeof err);
-        console.error("Error constructor:", err?.constructor?.name);
-        console.error("Error message:", err instanceof Error ? err.message : String(err));
-        
+
         if (err instanceof APIError) {
             console.error("APIError body:", err.body);
             console.error("APIError status:", err.status);
